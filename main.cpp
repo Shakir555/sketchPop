@@ -1,7 +1,7 @@
 #include <QApplication>
 #include <QWebEngineView>
-#include <QWebChannel>
 #include "backend.h"
+#include <QWebChannel>
 
 int main(int argc, char *argv[])
 {
@@ -9,16 +9,15 @@ int main(int argc, char *argv[])
 
     QWebEngineView view;
 
-    // Setup backend and web channel
+    // Setup backend and WebChannel
     Backend backend;
-    QWebChannel channel;
-    channel.registerObject(QStringLiteral("backend"), &backend);
-    view.page()->setWebChannel(&channel);
+    QWebChannel *channel = new QWebChannel(&view);
+    channel->registerObject(QStringLiteral("backend"), &backend);
+    view.page()->setWebChannel(channel);
 
-    // Load the local HTML from resources
-    view.setUrl(QUrl("qrc:/index.html"));
-
-    view.resize(900, 600);
+    // Load HTML from resources
+    view.setUrl(QUrl("qrc:/script/index.html"));
+    view.resize(800, 600);
     view.show();
 
     return app.exec();
