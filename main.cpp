@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     view.page()->setWebChannel(channel);
 
     // Load HTML from resources
-    view.setUrl(QUrl("qrc:/script/index.html"));
+    view.setUrl(QUrl("qrc:/web/index.html"));
     view.resize(800, 600);
     view.show();
 
