@@ -47,6 +47,11 @@ body {
 .tool-btn {
     background-color: #007bff;
     color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px; /* Spacing for icons if used */
+    min-width: 80px;
 }
 
 .tool-btn:hover {

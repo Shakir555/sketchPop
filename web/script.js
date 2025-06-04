@@ -4,7 +4,16 @@ let drawing = false;
 let tool = "draw";
 let backend;
 
-canvas.addEventListener("mousedown", () => drawing = true);
+// Undo/Redo Stacks
+let undoStack = [];
+let redoStack = [];
+const maxStackSize = 20;
+
+canvas.addEventListener("mousedown", () => {
+    drawing = true;
+    saveState(undoStack); // Save before drawing
+    redoStack = [];       // Clear redo history on new draw
+});
 canvas.addEventListener("mouseup", () => {
     drawing = false;
     ctx.beginPath();
@@ -32,6 +41,7 @@ function setTool(selectedTool) {
 }
 
 function clearCanvas() {
+    saveState(undoStack); // Save before clearing
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.beginPath();
 }
@@ -44,6 +54,31 @@ function saveImage() {
     } else {
         alert("Backend not ready!");
     }
+}
+
+function saveState(stack) {
+    if (stack.length >= maxStackSize) stack.shift(); // Limit stack size
+    stack.push(canvas.toDataURL());
+}
+
+function restoreState(stackFrom, stackTo) {
+    if (stackFrom.length === 0) return;
+    saveState(stackTo); // Save current state to opposite stack
+    const imgData = stackFrom.pop();
+    const img = new Image();
+    img.onload = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
+    };
+    img.src = imgData;
+}
+
+function undo() {
+    restoreState(undoStack, redoStack);
+}
+
+function redo() {
+    restoreState(redoStack, undoStack);
 }
 
 new QWebChannel(qt.webChannelTransport, function(channel) {
