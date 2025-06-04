@@ -9,20 +9,58 @@ let undoStack = [];
 let redoStack = [];
 const maxStackSize = 20;
 
-canvas.addEventListener("mousedown", () => {
+// Shape tool variables
+let startX = 0;
+let startY = 0;
+let currentX = 0;
+let currentY = 0;
+let isPreviewing = false;
+
+// Mouse Events
+canvas.addEventListener("mousedown", (e) => {
+    const rect = canvas.getBoundingClientRect();
+    startX = e.clientX - rect.left;
+    startY = e.clientY - rect.top;
     drawing = true;
-    saveState(undoStack); // Save before drawing
-    redoStack = [];       // Clear redo history on new draw
+    isPreviewing = false;
+    saveState(undoStack);
+    redoStack = [];
+
+    if (tool === "shape") {
+        isPreviewing = true;
+    }
 });
-canvas.addEventListener("mouseup", () => {
+
+canvas.addEventListener("mouseup", (e) => {
+    if (tool === "shape" && isPreviewing) {
+        const rect = canvas.getBoundingClientRect();
+        const endX = e.clientX - rect.left;
+        const endY = e.clientY - rect.top;
+        drawShape(startX, startY, endX, endY);
+    }
     drawing = false;
+    isPreviewing = false;
     ctx.beginPath();
 });
+
 canvas.addEventListener("mouseout", () => {
     drawing = false;
+    isPreviewing = false;
     ctx.beginPath();
 });
-canvas.addEventListener("mousemove", draw);
+
+canvas.addEventListener("mousemove", (e) => {
+    const rect = canvas.getBoundingClientRect();
+    currentX = e.clientX - rect.left;
+    currentY = e.clientY - rect.top;
+
+    if (tool === "draw" || tool === "erase") {
+        draw(e);
+    } else if (tool === "shape" && drawing && isPreviewing) {
+        restorePreview();
+        drawShape(startX, startY, currentX, currentY, true);
+    }
+});
 
 function draw(e) {
     if (!drawing) return;
@@ -36,12 +74,66 @@ function draw(e) {
     ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
 }
 
+function drawShape(x1, y1, x2, y2, preview = false) {
+    const shape = document.getElementById("shapeType").value;
+    const angle = parseFloat(document.getElementById("rotationInput").value || 0) * Math.PI / 180;
+    const color = document.getElementById("colorPicker").value;
+    const size = parseInt(document.getElementById("sizePicker").value);
+
+    const cx = (x1 + x2) / 2;
+    const cy = (y1 + y2) / 2;
+    const w = Math.abs(x2 - x1);
+    const h = Math.abs(y2 - y1);
+
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(angle);
+    ctx.lineWidth = size;
+    ctx.strokeStyle = color;
+
+    ctx.beginPath();
+    switch (shape) {
+        case "rectangle":
+            ctx.strokeRect(-w / 2, -h / 2, w, h);
+            break;
+        case "square":
+            const side = Math.min(w, h);
+            ctx.strokeRect(-side / 2, -side / 2, side, side);
+            break;
+        case "circle":
+            ctx.arc(0, 0, Math.min(w, h) / 2, 0, Math.PI * 2);
+            ctx.stroke();
+            break;
+        case "triangle":
+            ctx.moveTo(0, -h / 2);
+            ctx.lineTo(-w / 2, h / 2);
+            ctx.lineTo(w / 2, h / 2);
+            ctx.closePath();
+            ctx.stroke();
+            break;
+    }
+    ctx.restore();
+
+    if (!preview) ctx.beginPath();
+}
+
+function restorePreview() {
+    const lastState = undoStack[undoStack.length - 1];
+    if (!lastState) return;
+    const img = new Image();
+    img.onload = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
+    };
+    img.src = lastState;
+}
+
 function setTool(selectedTool) {
     tool = selectedTool;
 }
 
 function clearCanvas() {
-    saveState(undoStack); // Save before clearing
+    saveState(undoStack);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.beginPath();
 }
@@ -57,13 +149,13 @@ function saveImage() {
 }
 
 function saveState(stack) {
-    if (stack.length >= maxStackSize) stack.shift(); // Limit stack size
+    if (stack.length >= maxStackSize) stack.shift();
     stack.push(canvas.toDataURL());
 }
 
 function restoreState(stackFrom, stackTo) {
     if (stackFrom.length === 0) return;
-    saveState(stackTo); // Save current state to opposite stack
+    saveState(stackTo);
     const imgData = stackFrom.pop();
     const img = new Image();
     img.onload = () => {
