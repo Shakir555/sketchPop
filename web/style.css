@@ -50,7 +50,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4px; /* Spacing for icons if used */
+    gap: 4px;
     min-width: 80px;
 }
 

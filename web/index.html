@@ -19,6 +19,13 @@
             <option value="triangle">Triangle</option>
         </select>
         <input type="number" id="rotationInput" min="0" max="360" value="0" title="Rotation in degrees">
+        <!-- ✅ FIXED: Function name corrected -->
+        <select id="canvasSizeSelector" onchange="changeCanvasSize(this.value)">
+            <option value="A4">A4</option>
+            <option value="A3">A3</option>
+            <option value="A2">A2</option>
+            <option value="A1">A1</option>
+        </select>
         <button class="tool-btn" onclick="clearCanvas()">Clear</button>
         <button class="tool-btn" onclick="undo()">Undo</button>
         <button class="tool-btn" onclick="redo()">Redo</button>

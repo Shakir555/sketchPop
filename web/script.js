@@ -173,6 +173,45 @@ function redo() {
     restoreState(redoStack, undoStack);
 }
 
+function changeCanvasSize(size) {
+    // Save current canvas state
+    saveState(undoStack);
+    redoStack = [];
+
+    let width, height;
+    switch (size) {
+        case "A4":
+            width = 794;
+            height = 1123;
+            break;
+        case "A3":
+            width = 1123;
+            height = 1587;
+            break;
+        case "A2":
+            width = 1587;
+            height = 2245;
+            break;
+        case "A1":
+            width = 2245;
+            height = 3179;
+            break;
+        default:
+            width = 800;
+            height = 500;
+    }
+
+    // Preserve current image
+    const oldImage = new Image();
+    oldImage.src = canvas.toDataURL();
+    oldImage.onload = () => {
+        canvas.width = width;
+        canvas.height = height;
+        ctx.clearRect(0, 0, width, height);
+        ctx.drawImage(oldImage, 0, 0);
+    };
+}
+
 new QWebChannel(qt.webChannelTransport, function(channel) {
     backend = channel.objects.backend;
 });
