@@ -395,7 +395,8 @@ qrc_resources.cpp: resources.qrc \
 		/usr/lib/qt5/bin/rcc \
 		web/script.js \
 		web/style.css \
-		web/index.html
+		web/index.html \
+		img/sketchpop.jpeg
 	/usr/lib/qt5/bin/rcc -name resources resources.qrc -o qrc_resources.cpp
 
 compiler_moc_predefs_make_all: moc_predefs.h

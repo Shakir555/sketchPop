@@ -17,48 +17,55 @@ body {
 
 #sidebar {
     background-color: #ffffff;
-    padding: 15px;
-    width: 200px;
+    padding: 10px;
+    width: 160px; /* smaller sidebar */
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
-    box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+    gap: 8px;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
 }
 
 #logo {
     width: 100%;
-    max-width: 150px;
-    margin-bottom: 10px;
+    max-width: 100px; /* smaller logo */
+    margin-bottom: 8px;
 }
 
-.tool-btn,
-#colorPicker,
-#sizePicker,
-#shapeType,
-#rotationInput,
-#canvasSizeSelector {
-    width: 100%;
-    padding: 8px;
-    font-size: 14px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-}
-
+/* Make buttons smaller */
 .tool-btn {
+    width: 120px; /* smaller width */
+    padding: 6px;
+    font-size: 12px;
+    border-radius: 5px;
     background-color: #8B4513;
     color: #FFD700;
     border: none;
     cursor: pointer;
     transition: 0.2s;
+    text-align: center;
 }
 
 .tool-btn:hover {
     background-color: #5C3317;
 }
 
+/* Input and select styling */
+#colorPicker,
+#sizePicker,
+#shapeType,
+#rotationInput,
+#canvasSizeSelector {
+    width: 90%; /* smaller inputs */
+    padding: 6px;
+    font-size: 12px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* Color picker size */
 #colorPicker {
-    height: 40px;
+    height: 30px;
     padding: 0;
 }
 
@@ -67,7 +74,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 15px;
 }
 
 #canvas {
