@@ -6,32 +6,38 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="toolbar">
-        <button class="tool-btn" onclick="setTool('draw')">Draw</button>
-        <button class="tool-btn" onclick="setTool('erase')">Erase</button>
-        <input type="color" id="colorPicker">
-        <input type="range" id="sizePicker" min="1" max="50" value="5">
-        <button class="tool-btn" onclick="setTool('shape')">shape</button>
-        <select id="shapeType">
-            <option value="rectangle">Rectangle</option>
-            <option value="square">Square</option>
-            <option value="circle">Circle</option>
-            <option value="triangle">Triangle</option>
-        </select>
-        <input type="number" id="rotationInput" min="0" max="360" value="0" title="Rotation in degrees">
-        <!-- ✅ FIXED: Function name corrected -->
-        <select id="canvasSizeSelector" onchange="changeCanvasSize(this.value)">
-            <option value="A4">A4</option>
-            <option value="A3">A3</option>
-            <option value="A2">A2</option>
-            <option value="A1">A1</option>
-        </select>
-        <button class="tool-btn" onclick="clearCanvas()">Clear</button>
-        <button class="tool-btn" onclick="undo()">Undo</button>
-        <button class="tool-btn" onclick="redo()">Redo</button>
-        <button class="tool-btn" onclick="saveImage()">Save</button>
+    <div id="main-container">
+        <div id="sidebar">
+            <img src="../img/sketchpop.jpeg" alt="SketchPop Logo" id="logo">
+            <button class="tool-btn" onclick="setTool('draw')">Draw</button>
+            <button class="tool-btn" onclick="setTool('erase')">Erase</button>
+            <input type="color" id="colorPicker">
+            <input type="range" id="sizePicker" min="1" max="50" value="5">
+            <button class="tool-btn" onclick="setTool('shape')">Shape</button>
+            <select id="shapeType">
+                <option value="rectangle">Rectangle</option>
+                <option value="square">Square</option>
+                <option value="circle">Circle</option>
+                <option value="triangle">Triangle</option>
+            </select>
+            <input type="number" id="rotationInput" min="0" max="360" value="0" title="Rotation in degrees">
+            <select id="canvasSizeSelector" onchange="changeCanvasSize(this.value)">
+                <option value="A4">A4</option>
+                <option value="A3">A3</option>
+                <option value="A2">A2</option>
+                <option value="A1">A1</option>
+            </select>
+            <button class="tool-btn" onclick="clearCanvas()">Clear</button>
+            <button class="tool-btn" onclick="undo()">Undo</button>
+            <button class="tool-btn" onclick="redo()">Redo</button>
+            <button class="tool-btn" onclick="saveImage()">Save</button>
+        </div>
+
+        <div id="canvas-container">
+            <canvas id="canvas" width="800" height="500"></canvas>
+        </div>
     </div>
-    <canvas id="canvas" width="800" height="500"></canvas>
+
     <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
     <script src="script.js"></script>
 </body>
